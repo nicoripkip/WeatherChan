@@ -14,8 +14,12 @@ const intents = {
     ]
 }
 const client = new discord.Client(intents)
-const commandsPath = path.join(__dirname, '../commands');
+const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath);
+const knmiApiUrls = [
+    `https://api.dataplatform.knmi.nl/open-data/v1/datasets/Actuele10mindataKNMIstations/versions/2/files`,
+    `https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_forecast/versions/1.0/files`,
+]
 
 
 let commands = new discord.Collection()
@@ -34,12 +38,34 @@ for (const file in commandFiles) {
     }   
 }
 
+
+
+
+async function getWeatherData(token) {
+    const headers = {
+        'Authorization':token
+    }
+    const response = await fetch(knmiApiUrls[1], { headers })
+        .then(response => response.json())
+        .then(data => {
+            console.log(`[info]\tData: ${JSON.stringify(data)}`)
+        })
+        .catch(error => {
+            console.error(error)
+        })
+
+    // if (response.status == 200) {
+    //     console.log(`[info]\tGot weather data from KNMI!`)
+    //     console.log(`[info]\tHeader: ${response.json()}`)
+    // }
+}
+
+
 client.on(discord.Events.ClientReady, client => {
     console.log(`[info]\tBot has logged in as: ${client.user.tag}`)
     console.log(`[info]\tInvite url: https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=${process.env.PERMISSIONS}&scope=bot%20applications.commands`)
 
-    // console.log(client.guilds.cache.get(process.env.SERVER_ID).users) //.get('382854499141812224').send("hello")
-    client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get(process.env.CHANNEL_ID).send("Henkers")
+    getWeatherData(process.env.WEATHER_API_TOKEN)
 })
 
 // and deploy your commands!
@@ -76,24 +102,6 @@ client.on(discord.Events.MessageCreate, message => {
 
     // message.guilds.cache.get(process.env.SERVER_ID).channels.cache.get(process.env.CHANNEL_ID).send("Je moeder")
     
-})
-
-
-client.on(discord.Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-    console.log("Interaction create");
-    console.log(interaction.commandName)
-
-    const command = interaction.client.commands.get(interaction.commandName)
-    if (!command) {
-        console.error(`[error]\tNo matching command: ${interaction.commandName} was found!\n`)
-    }
-
-    try {
-        await command.execute(interaction)
-    } catch (error) {
-
-    }
 })
 
 
