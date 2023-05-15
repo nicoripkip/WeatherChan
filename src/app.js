@@ -4,10 +4,7 @@ const path = require('node:path')
 const discord = require("discord.js")
 const fetch = require("node-fetch")
 const utils = require(path.join(__dirname, "utils.js"))
-const grib = require("grib2class")
 
-
-grib.apply
 
 const commandPrefix = "!";
 const intents = {
@@ -53,9 +50,18 @@ client.on(discord.Events.MessageCreate, message => {
         console.log(`Message received in ${message.channel.name}: ${message.content}`)
         // message.channel.send("Yo mamaaaa")
 
-        const response = utils.getWeatherData(utils.knmiApiUrls[1])
+        const response = utils.getWeatherData(utils.knmiApiUrls[2])
         response.then(data => {
-            message.channel.send(JSON.stringify(data))
+            const fileName = data.files[data.files.length-1].filename
+            const fileUrl = utils.knmiApiUrls[2] + "/" + fileName + "/url"
+            const response = utils.downloadGribFileFromApi(fileUrl, fileName)
+            response.then(() => {
+                console.log(`[info]\tFinished!`)
+            })
+            // console.log(response)
+
+            let messages = "lolz";
+            message.channel.send(messages)
         })
     }
 
