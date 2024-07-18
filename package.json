@@ -4,7 +4,8 @@
   "description": "A discordbot that updates the weather 3 times a day",
   "main": "app.js",
   "scripts": {
-    "dev": "node src/app.js"
+    "dev": "node src/app.js",
+    "prod": "node src/app.js"
   },
   "repository": {
     "type": "git",

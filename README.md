@@ -1,6 +1,6 @@
 # WeatherChan
 
-## Abaout
+## About
 This discord bot is created for information about the weather and other meteological data.
 
 ## Installation
@@ -19,8 +19,10 @@ npm install
 Make sure to update the config.js to add your discord information. Then you can run the bot with the following command:
 
 ```bash
-npm run production
+npm run prod
 ```
+
+## Commands
 
 ## Libraries
 

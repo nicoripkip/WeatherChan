@@ -1,9 +1,8 @@
-require("dotenv").config()
 const fs = require('node:fs');
 const path = require('node:path')
 const discord = require("discord.js")
-const fetch = require("node-fetch")
 const utils = require(path.join(__dirname, "utils.js"))
+const config = require(path.join(__dirname, "config.js"))
 
 
 const commandPrefix = "!";
@@ -39,26 +38,16 @@ for (const file in commandFiles) {
 
 client.on(discord.Events.ClientReady, client => {
     console.log(`[info]\tBot has logged in as: ${client.user.tag}`)
-    console.log(`[info]\tInvite url: https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=${process.env.PERMISSIONS}&scope=bot%20applications.commands`)
+    console.log(`[info]\tInvite url: https://discord.com/api/oauth2/authorize?client_id=${config.discord.clientID}&permissions=${config.discord.permissions}&scope=bot%20applications.commands`)
 })
 
 
 client.on(discord.Events.MessageCreate, message => {
     console.log("henk")
-    if (message.channel.id === process.env.CHANNEL_ID && !message.author.bot && message.content.startsWith(commandPrefix)) {
+    if (message.channel.id === config.discord.channelID && !message.author.bot && message.content.startsWith(commandPrefix)) {
         // The message was sent in the specific channel
         console.log(`Message received in ${message.channel.name}: ${message.content}`)
         // message.channel.send("Yo mamaaaa")
-
-        const response = utils.getWeatherData(utils.knmiApiUrls[2])
-        response.then(data => {
-            const fileName = data.files[data.files.length-1].filename
-            const fileUrl = utils.knmiApiUrls[2] + "/" + fileName + "/url"
-            const response = utils.downloadGribFileFromApi(fileUrl, fileName)
-            response.then(() => {
-                console.log(`[info]\tFinished!`)
-            })
-            // console.log(response)
 
             let messages = "lolz";
             message.channel.send(messages)
@@ -76,4 +65,4 @@ client.on('error', (error) => {
 })
 
 
-client.login(process.env.TOKEN)
+client.login(config.discord.token)
