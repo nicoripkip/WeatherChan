@@ -5,13 +5,6 @@ const { finished, Readable, Stream } = require("node:stream");
 const { promisify } = require("node:util");
 
 
-const knmiApiUrls = [
-    `https://api.dataplatform.knmi.nl/open-data/v1/datasets/Actuele10mindataKNMIstations/versions/2/files`,
-    `https://api.dataplatform.knmi.nl/open-data/v1/datasets/radar_forecast/versions/1.0/files`,
-    `https://api.dataplatform.knmi.nl/open-data/v1/datasets/harmonie_arome_cy40_p5/versions/0.2/files`,
-]
-
-
 const datasetFolder = "datasets"
 const datasetPath = path.join(__dirname, "../"+datasetFolder)
 if (!fs.existsSync(datasetPath)) {
